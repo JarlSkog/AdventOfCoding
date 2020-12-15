@@ -1,0 +1,89 @@
+public static int boardingPasses() throws FileNotFoundException {
+        int max = 0;
+        Scanner scan = new Scanner(new File("BinaryBoardingPasses.txt"));
+        ArrayList<String> ids = new ArrayList<>();
+        while (scan.hasNextLine()) {
+            String line = scan.nextLine();
+            ids.add(line);
+        }
+        return getUnfilled(ids);
+    }
+    
+    private static int getUnfilled(ArrayList<String> ids) throws FileNotFoundException {
+        Map<Integer, Boolean> seats = new HashMap<>();
+        for (int i = 0; i <= 1023; i++) {
+            seats.put(i, Boolean.FALSE);
+        }
+        for (int i = 0; i < ids.size(); i++) {
+            int seatID = getSeatID(ids.get(i));
+            seats.put(seatID, Boolean.TRUE);
+        }   
+        ArrayList<Integer> unfilled = new ArrayList<>();
+        for (int i = 0; i <= 1023; i++) {
+            if (i > 0 && !seats.get(i)) {
+                if (seats.get(i + 1) && seats.get(i - 1)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    
+    private static int getSeatID(String pass) throws FileNotFoundException {
+        int myRow = processRows(pass, 0, 127, 0);
+        int myCol = processColumns(pass, 0, 7, 7);
+        int seatID = (myRow * 8) + myCol;
+        return seatID;
+    }
+    
+    private static int processRows(String pass, int min, int max, int iterate) {
+        if (max - min > 3 && iterate < 5){
+            if (pass.charAt(iterate) == 'F') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processRows(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processRows(pass, min, max, iterate + 1));
+            }
+        } else if (max - min == 3 && iterate == 5){
+            if (pass.charAt(iterate) == 'F') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processRows(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processRows(pass, min, max, iterate + 1));
+            }
+        } else {
+            if (pass.charAt(iterate) == 'F') {
+                return min;
+            } else {
+                return max;
+            }
+        }
+    }
+    
+    private static int processColumns(String pass, int min, int max, int iterate) {
+        if (iterate < 8 && max - min > 3) {
+            if (pass.charAt(iterate) == 'L') {
+                max = max - ((max - min) / 2) - 1; 
+                return processColumns(pass, min, max, iterate + 1);
+            } else {
+                min = ((max - min) / 2) + 1;
+                return processColumns(pass, min, max, iterate + 1);
+            }
+        } else if (max - min == 3 && iterate == 8) {
+            if (pass.charAt(iterate) == 'L') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processColumns(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processColumns(pass, min, max, iterate + 1));
+            }
+        } else {
+            if (pass.charAt(iterate) == 'L') {
+                return min;
+            } else {
+                return max;
+            }
+        }
+    }   
