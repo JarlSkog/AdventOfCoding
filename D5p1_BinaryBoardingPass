@@ -1,0 +1,82 @@
+private static int getSeatID(String pass) throws FileNotFoundException {
+        
+        int myRow = processRows(pass, 0, 127, 0);
+        System.out.println("Row #" + myRow);
+        
+        
+        int myCol = processColumns(pass, 0, 7, 7);
+        System.out.println("Column #" + myCol);
+        
+        int seatID = (myRow * 8) + myCol;
+        
+        System.out.println("Seat ID: " + seatID + "\n");
+        
+       
+        return seatID;
+    }
+    
+    private static int processRows(String pass, int min, int max, int iterate) {
+        if (iterate >= 7) {
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds: index: " + iterate);
+        }
+        System.out.print("Min Row: " + min + " Max Row: " + max);
+        if (max - min > 3 && iterate < 5){
+            System.out.println();
+            if (pass.charAt(iterate) == 'F') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processRows(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processRows(pass, min, max, iterate + 1));
+            }
+        } else if (max - min == 3 && iterate == 5){
+            System.out.println();
+            if (pass.charAt(iterate) == 'F') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processRows(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processRows(pass, min, max, iterate + 1));
+            }
+        } else {
+            System.out.println();
+            if (pass.charAt(iterate) == 'F') {
+                System.out.println(" Return value: " + min);
+                return min;
+            } else {
+                System.out.println(" Return value: " + max);
+                return max;
+            }
+        }
+    }
+    
+    private static int processColumns(String pass, int min, int max, int iterate) {
+        System.out.print("Min Column: " + min + " Max Column: " + max);
+        if (iterate < 8 && max - min > 3) {
+            System.out.println();
+            if (pass.charAt(iterate) == 'L') {
+                max = max - ((max - min) / 2) - 1; 
+                return processColumns(pass, min, max, iterate + 1);
+            } else {
+                min = ((max - min) / 2) + 1;
+                return processColumns(pass, min, max, iterate + 1);
+            }
+        } else if (max - min == 3 && iterate == 8) {
+            System.out.println();
+            if (pass.charAt(iterate) == 'L') {
+                max = max - ((max - min) / 2) - 1;  
+                return (processColumns(pass, min, max, iterate + 1));
+            } else {
+                min = min + ((max - min) / 2) + 1;
+                return (processColumns(pass, min, max, iterate + 1));
+            }
+        } else {
+            if (pass.charAt(iterate) == 'L') {
+                System.out.println("\nReturn value: " + min);
+                return min;
+            } else {
+                System.out.println("\nReturn value: " + max);
+                return max;
+            }
+        }
+    }
