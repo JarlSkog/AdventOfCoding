@@ -1,0 +1,37 @@
+    public static int sumOfCounts() throws FileNotFoundException, IOException {
+        Scanner scan = new Scanner(new File("CustomsQuestionAnswers.txt"));
+//        ArrayList<String> groups = new ArrayList<>();
+        int sum = 0;
+        ArrayList<String> passengers = new ArrayList<>();
+        while (scan.hasNextLine()) {
+            passengers.add(scan.nextLine());
+        } scan.close();
+//        System.out.println("Passengers: " + passengers);
+        String oneGroup = "";
+        ArrayList<String> groups = new ArrayList<>();
+        for (int i = 0; i < passengers.size(); i++) {
+                if (!passengers.get(i).isBlank()) {
+//                    System.out.println(passengers.get(i));
+                    oneGroup += passengers.get(i);
+                } else {
+//                    System.out.println("Group: " + oneGroup);
+                    ArrayList<Character> answered = new ArrayList<>();
+                    for (int j = 0; j < oneGroup.length(); j++){
+                        if (!answered.contains(oneGroup.charAt(j))) {
+                            answered.add(oneGroup.charAt(j));
+                        }
+                    }
+                    sum += answered.size();
+                    oneGroup = "";
+                }
+        }
+        ArrayList<Character> answered = new ArrayList<>();
+            for (int j = 0; j < oneGroup.length(); j++){
+                if (!answered.contains(oneGroup.charAt(j))) {
+                    answered.add(oneGroup.charAt(j));
+                }
+            }
+            sum += answered.size();
+        
+        return sum;
+     } 
